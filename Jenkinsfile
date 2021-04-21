@@ -27,7 +27,7 @@ pipeline {
 
     stage('Pushing image') {
       steps{
-        withDockerRegistry([ credentialsId: "Docker hub credentials", url: "" ]) { 
+        withDockerRegistry([ credentialsId: "dockerHubCredentials", url: "" ]) { 
           sh 'docker push $dockerImageComment'
           sh 'docker push $dockerImagePost'
           sh 'docker push $dockerImageUi'
