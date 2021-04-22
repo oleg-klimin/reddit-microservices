@@ -46,22 +46,18 @@ pipeline {
 
     stage('Deploing to EKS') {
       steps{
-        withCredentials([
-                        $class: 'AmazonWebServicesCredentialsBinding', 
-                        credentialsId: 'AWS_CREDENTIALS', 
-                        accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                        secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-        ])
-        script {
-          try {
-            sh "kubectl delete deploy --all -n dev"
-            sh "kubectl delete svc --all -n dev"
+        withAWS(credentials: 'AWS_CREDENTIALS') {
+          script {
+            try {
+              sh "kubectl delete deploy --all -n dev"
+              sh "kubectl delete svc --all -n dev"
 
-          } catch (err) {
+            } catch (err) {
             echo "No web deployment found, continuing"
-          }
-          sh "kubectl apply -f kubernetes/. -n dev"
             }
+            sh "kubectl apply -f kubernetes/. -n dev"
+            }
+           }
            }
         }
 
