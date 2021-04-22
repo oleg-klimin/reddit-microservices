@@ -55,6 +55,7 @@ pipeline {
             } catch (err) {
             echo "No web deployment found, continuing"
             }
+            sh "kubectl apply -f kubernetes/dev-namespace.yml"
             sh "kubectl apply -f kubernetes/. -n dev"
             }
            }
