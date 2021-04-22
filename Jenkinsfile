@@ -4,6 +4,7 @@ pipeline {
         dockerImagePost = 'zombrox/new_post_py'
         dockerImageUi = 'zombrox/new_ui'
         shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%h'").trim()
+        KUBECONFIG = '/var/lib/jenkins/.kube/reddis-kube'
     }  
 
   agent any
@@ -43,8 +44,14 @@ pipeline {
           }
         }
 
-    stage('Deploing to minikube') {
+    stage('Deploing to EKS') {
       steps{
+        withCredentials([[
+                        $class: 'AmazonWebServicesCredentialsBinding', 
+                        credentialsId: 'AWS_CREDENTIALS', 
+                        accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                        secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+        ]])
         script {
           try {
             sh "kubectl delete deploy --all -n dev"
