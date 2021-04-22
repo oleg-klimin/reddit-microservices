@@ -46,12 +46,12 @@ pipeline {
 
     stage('Deploing to EKS') {
       steps{
-        withCredentials([[
+        withCredentials([
                         $class: 'AmazonWebServicesCredentialsBinding', 
                         credentialsId: 'AWS_CREDENTIALS', 
                         accessKeyVariable: 'AWS_ACCESS_KEY_ID',
                         secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-        ]])
+        ])
         script {
           try {
             sh "kubectl delete deploy --all -n dev"
